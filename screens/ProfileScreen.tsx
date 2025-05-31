@@ -359,6 +359,7 @@ const styles = StyleSheet.create({
   },
   yearList: {
     maxHeight: 400,
+    width: 100,
     backgroundColor: colors.white
   },
   optionButton: {
