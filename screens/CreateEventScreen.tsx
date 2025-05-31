@@ -10,12 +10,20 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
-import { Beer, Coffee, MessageCircle, FileWarning as Running } from "lucide-react-native";
+import {
+  Beer,
+  Coffee,
+  MessageCircle,
+  FileWarning as Running,
+  Clock,
+  MapPin,
+  Users,
+} from "lucide-react-native";
 import axios from "axios";
 import { colors } from "../theme";
 import useLocation from "../hooks/useLocation";
 
-const EVENT_TYPES = [
+const EVENT_TAGS = [
   { id: "pivo", icon: Beer, label: "Na pivo" },
   { id: "kafe", icon: Coffee, label: "Na kávu" },
   { id: "pokec", icon: MessageCircle, label: "Pokec" },
@@ -25,31 +33,36 @@ const EVENT_TYPES = [
 export default function CreateEventScreen() {
   const navigation = useNavigation();
   const { location, loading, error, refresh } = useLocation();
-  const [type, setType] = useState("pivo");
+  const [tags, setTags] = useState(["pivo"]);
   const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
   const [peopleLimit, setPeopleLimit] = useState(2);
+  const [timeType, setTimeType] = useState("now");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleCreate = async () => {
-    if (!location) {
-      return;
-    }
+  const toggleTag = (tag: string) => {
+    setTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
-    if (peopleLimit < 1 || peopleLimit > 5) {
-      return;
-    }
+  const handleCreate = async () => {
+    if (!location) return;
+    if (peopleLimit < 1 || peopleLimit > 10) return;
+    if (!name.trim()) return;
 
     setIsSubmitting(true);
     try {
       await axios.post("http://10.0.1.41:3001/api/events", {
         user_id: "abc123",
-        type,
+        name,
         description,
+        tags,
         people_limit: peopleLimit,
         latitude: location.latitude,
         longitude: location.longitude,
+        time_type: timeType,
       });
-
       navigation.goBack();
     } catch (err) {
       console.log("Chyba při vytváření:", err);
@@ -59,39 +72,42 @@ export default function CreateEventScreen() {
   };
 
   return (
-    <ScrollView 
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      bounces={false}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content} bounces={false}>
       <Text style={styles.title}>Vytvořit událost</Text>
-      
+
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Typ události</Text>
+        <Text style={styles.sectionTitle}>Název události</Text>
+        <BlurView intensity={60} tint="light" style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Např. Na jedno do centra"
+            placeholderTextColor={colors.surface}
+            value={name}
+            onChangeText={setName}
+          />
+        </BlurView>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Tagy</Text>
         <View style={styles.typeGrid}>
-          {EVENT_TYPES.map((item) => (
+          {EVENT_TAGS.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={[
-                styles.typeButton,
-                type === item.id && styles.typeButtonActive
-              ]}
-              onPress={() => setType(item.id)}
+              style={[styles.typeButton, tags.includes(item.id) && styles.typeButtonActive]}
+              onPress={() => toggleTag(item.id)}
             >
-              <BlurView 
-                intensity={type === item.id ? 90 : 60} 
-                tint="light" 
+              <BlurView
+                intensity={tags.includes(item.id) ? 90 : 60}
+                tint="light"
                 style={styles.typeButtonContent}
               >
                 <item.icon
                   size={24}
-                  color={type === item.id ? colors.primary : colors.surface}
+                  color={tags.includes(item.id) ? colors.primary : colors.surface}
                   strokeWidth={2}
                 />
-                <Text style={[
-                  styles.typeButtonText,
-                  type === item.id && styles.typeButtonTextActive
-                ]}>
+                <Text style={[styles.typeButtonText, tags.includes(item.id) && styles.typeButtonTextActive]}>
                   {item.label}
                 </Text>
               </BlurView>
@@ -105,7 +121,7 @@ export default function CreateEventScreen() {
         <BlurView intensity={60} tint="light" style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Např. 'Dáme jedno v centru...'"
+            placeholder="Např. 'Dáme jedno v centru..."'
             placeholderTextColor={colors.surface}
             value={description}
             onChangeText={setDescription}
@@ -127,10 +143,34 @@ export default function CreateEventScreen() {
           <Text style={styles.counterText}>{peopleLimit}</Text>
           <TouchableOpacity
             style={styles.counterButton}
-            onPress={() => setPeopleLimit(Math.min(5, peopleLimit + 1))}
+            onPress={() => setPeopleLimit(Math.min(10, peopleLimit + 1))}
           >
             <Text style={styles.counterButtonText}>+</Text>
           </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Kdy?</Text>
+        <View style={styles.typeGrid}>
+          {["now", "planned"].map((option) => (
+            <TouchableOpacity
+              key={option}
+              style={[styles.typeButton, timeType === option && styles.typeButtonActive]}
+              onPress={() => setTimeType(option)}
+            >
+              <BlurView
+                intensity={timeType === option ? 90 : 60}
+                tint="light"
+                style={styles.typeButtonContent}
+              >
+                <Clock size={20} color={timeType === option ? colors.primary : colors.surface} />
+                <Text style={[styles.typeButtonText, timeType === option && styles.typeButtonTextActive]}>
+                  {option === "now" ? "Teď hned" : "Naplánovat"}
+                </Text>
+              </BlurView>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 
@@ -144,12 +184,9 @@ export default function CreateEventScreen() {
       )}
 
       <TouchableOpacity
-        style={[
-          styles.createButton,
-          (loading || isSubmitting || !location) && styles.createButtonDisabled
-        ]}
+        style={[styles.createButton, (loading || isSubmitting || !location || !name) && styles.createButtonDisabled]}
         onPress={handleCreate}
-        disabled={loading || isSubmitting || !location}
+        disabled={loading || isSubmitting || !location || !name}
       >
         {isSubmitting ? (
           <ActivityIndicator color={colors.white} />
@@ -162,6 +199,7 @@ export default function CreateEventScreen() {
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
