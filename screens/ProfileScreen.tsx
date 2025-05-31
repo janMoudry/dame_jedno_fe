@@ -7,11 +7,18 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import axios from "axios";
-import { User, CircleUser as UserCircle2, Mail, Calendar } from "lucide-react-native";
+import { User, CircleUser as UserCircle2, ChevronDown, Calendar } from "lucide-react-native";
 import colors from "../theme/colors";
+
+const GENDER_OPTIONS = [
+  { label: "Muž", value: "muž" },
+  { label: "Žena", value: "žena" },
+  { label: "Jiné", value: "jiné" },
+];
 
 type User = {
   name: string;
@@ -27,6 +34,7 @@ export default function ProfileScreen() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  const [showGenderModal, setShowGenderModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchUser = async () => {
@@ -109,16 +117,15 @@ export default function ProfileScreen() {
             />
           </BlurView>
 
-          <BlurView intensity={60} tint="light" style={styles.inputContainer}>
-            <Mail size={20} color={colors.surface} />
-            <TextInput
-              style={styles.input}
-              placeholder="Pohlaví"
-              placeholderTextColor={colors.surface}
-              value={gender}
-              onChangeText={setGender}
-            />
-          </BlurView>
+          <TouchableOpacity onPress={() => setShowGenderModal(true)}>
+            <BlurView intensity={60} tint="light" style={styles.inputContainer}>
+              <User size={20} color={colors.surface} />
+              <Text style={[styles.input, !gender && styles.placeholder]}>
+                {gender || "Vyberte pohlaví"}
+              </Text>
+              <ChevronDown size={20} color={colors.surface} />
+            </BlurView>
+          </TouchableOpacity>
 
           <BlurView intensity={60} tint="light" style={styles.inputContainer}>
             <Calendar size={20} color={colors.surface} />
@@ -161,6 +168,39 @@ export default function ProfileScreen() {
           )}
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={showGenderModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowGenderModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowGenderModal(false)}
+        >
+          <BlurView intensity={80} tint="light" style={styles.modalContent}>
+            {GENDER_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={styles.optionButton}
+                onPress={() => {
+                  setGender(option.value);
+                  setShowGenderModal(false);
+                }}
+              >
+                <Text style={[
+                  styles.optionText,
+                  gender === option.value && styles.optionTextSelected
+                ]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </BlurView>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
@@ -215,6 +255,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
     marginLeft: 12,
+  },
+  placeholder: {
+    color: colors.surface,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    width: "100%",
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+  optionButton: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surface + "20",
+  },
+  optionText: {
+    fontSize: 16,
+    color: colors.text,
+    textAlign: "center",
+  },
+  optionTextSelected: {
+    color: colors.primary,
+    fontWeight: "600",
   },
   errorContainer: {
     backgroundColor: colors.error + "15",
