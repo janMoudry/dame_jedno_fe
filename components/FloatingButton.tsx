@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     bottom: 30,
+    shadowColor: "transparent"
   },
   button: {
     backgroundColor: colors.card,
