@@ -188,7 +188,6 @@ export default function ProfileScreen() {
           activeOpacity={1}
           onPress={() => setShowGenderModal(false)}
         >
-          <BlurView intensity={80} tint="light" style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Vyberte pohlaví</Text>
               <TouchableOpacity
@@ -220,7 +219,6 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-          </BlurView>
         </TouchableOpacity>
       </Modal>
 
@@ -236,7 +234,6 @@ export default function ProfileScreen() {
           activeOpacity={1}
           onPress={() => setShowYearModal(false)}
         >
-          <BlurView intensity={80} tint="light" style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Rok narození</Text>
               <TouchableOpacity
@@ -268,7 +265,6 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               ))}
             </ScrollView>
-          </BlurView>
         </TouchableOpacity>
       </Modal>
     </ScrollView>
