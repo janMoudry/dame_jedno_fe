@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     backgroundColor: colors.card,
     justifyContent: "center",
-    
     alignItems: "center",
     ...Platform.select({
       ios: {
