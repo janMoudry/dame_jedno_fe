@@ -54,12 +54,12 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Create"
           component={CreateEventScreen}
-          options={{ title: "Nová událost" }}
+          options={{ title: "Nová událost", headerShown: false }}
         />
         <Stack.Screen
           name="EventDetail"
           component={EventDetailScreen}
-          options={{ title: "Detail události" }}
+          options={{ title: "Detail události", headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
