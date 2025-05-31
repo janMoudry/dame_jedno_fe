@@ -143,8 +143,8 @@ export default function ProfileScreen() {
                 {birthYear ? String(birthYear) : "Rok narození"}
               </Text>
               <ChevronDown size={20} color={colors.surface} />
-            />
-          </BlurView>
+            </BlurView>
+          </TouchableOpacity>
         </View>
       </View>
 
