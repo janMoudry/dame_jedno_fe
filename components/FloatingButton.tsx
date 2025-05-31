@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.card,
+    backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
     ...Platform.select({
