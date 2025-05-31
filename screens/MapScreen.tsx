@@ -11,6 +11,18 @@ import colors from "../theme/colors";
 
 const MAP_STYLE = [
   {
+    elementType: "geometry",
+    stylers: [{ color: "#242f3e" }],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#746855" }],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [{ color: "#242f3e" }],
+  },
+  {
     featureType: "poi",
     elementType: "labels",
     stylers: [{ visibility: "off" }],
@@ -19,6 +31,16 @@ const MAP_STYLE = [
     featureType: "transit",
     elementType: "labels",
     stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#17263c" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#515c6d" }],
   },
 ];
 
@@ -126,9 +148,12 @@ const styles = StyleSheet.create({
   markerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
+    padding: 12,
     borderRadius: 16,
     maxWidth: 200,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
   markerContent: {
     width: 36,
@@ -139,7 +164,7 @@ const styles = StyleSheet.create({
   },
   markerText: {
     fontSize: 18,
-    color: colors.white,
+    color: colors.text,
   },
   markerInfo: {
     marginLeft: 8,
@@ -152,6 +177,6 @@ const styles = StyleSheet.create({
   },
   markerSubtitle: {
     fontSize: 12,
-    color: colors.surface,
+    color: colors.textSecondary,
   },
 });
