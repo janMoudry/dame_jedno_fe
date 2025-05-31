@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import axios from "axios";
-import { User, UserCircle2, Mail, Calendar } from "lucide-react-native";
+import { User, CircleUser as UserCircle2, Mail, Calendar } from "lucide-react-native";
 import colors from "../theme/colors";
 
 type User = {
