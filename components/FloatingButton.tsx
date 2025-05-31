@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 30,
     zIndex: 10,
+    backgroundColor: "red"
   },
   blur: {
     width: 64,
