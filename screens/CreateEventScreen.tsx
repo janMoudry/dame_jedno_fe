@@ -12,7 +12,6 @@ import {
   Animated,
 } from "react-native";
 import { BlurView } from "expo-blur";
-
 import { useNavigation } from "@react-navigation/native";
 import {
   Beer,
