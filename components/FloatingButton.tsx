@@ -1,7 +1,8 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { Plus } from "lucide-react-native";
 import colors from "../theme/colors";
+import { BlurView } from "expo-blur";
 
 type Props = {
   onPress: () => void;
@@ -10,9 +11,9 @@ type Props = {
 export const FloatingButton = ({ onPress }: Props) => {
   return (
     <TouchableOpacity style={styles.buttonWrapper} onPress={onPress}>
-      <View style={styles.button}>
-        <Plus size={28} color={colors.white} strokeWidth={2.5} />
-      </View>
+      <BlurView intensity={80} tint="light" style={styles.button}>
+        <Plus size={24} color={colors.primary} strokeWidth={2.5} />
+      </BlurView>
     </TouchableOpacity>
   );
 };
@@ -24,16 +25,16 @@ const styles = StyleSheet.create({
     bottom: 30,
   },
   button: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.card,
     borderRadius: 30,
     width: 56,
     height: 56,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
 });

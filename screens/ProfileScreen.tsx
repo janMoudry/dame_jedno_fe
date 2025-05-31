@@ -108,29 +108,28 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
     padding: 20,
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   label: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: colors.surface,
     marginBottom: 4,
     marginTop: 12,
   },
   input: {
-    backgroundColor: colors.background,
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: colors.white,
+    borderColor: colors.surface,
     borderWidth: 1,
     borderRadius: 8,
     padding: 10,
     fontSize: 16,
-    color: colors.text,
   },
   saveButton: {
     marginTop: 24,
@@ -142,6 +141,5 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     color: colors.white,
-    fontWeight: "600",
   },
 });

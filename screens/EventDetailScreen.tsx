@@ -76,7 +76,7 @@ export default function EventDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
   },
   mapContainer: {
     height: 300,
@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
     marginTop: -24,
     padding: 24,
     minHeight: 400,
-    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: "row",
@@ -103,8 +102,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.1)",
   },
   typeIconText: {
     fontSize: 24,
@@ -121,17 +118,17 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: colors.surface,
   },
   infoContainer: {
-    backgroundColor: colors.gradient.start,
+    backgroundColor: colors.background,
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
   },
   infoLabel: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: colors.surface,
     marginBottom: 4,
   },
   infoValue: {

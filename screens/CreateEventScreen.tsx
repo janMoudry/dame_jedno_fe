@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   label: {
     fontSize: 16,
@@ -119,12 +119,11 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: colors.surface,
     borderRadius: 8,
     padding: 10,
     fontSize: 16,
-    backgroundColor: colors.background,
-    color: colors.text,
+    backgroundColor: colors.white,
   },
   buttonGroup: {
     flexDirection: "row",
@@ -137,8 +136,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    backgroundColor: colors.background,
+    borderColor: colors.surface,
+    backgroundColor: colors.white,
   },
   buttonActive: {
     backgroundColor: colors.primary,
@@ -156,18 +155,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   createButtonText: {
-    color: colors.text,
+    color: "#fff",
     fontSize: 16,
-    fontWeight: "600",
   },
   error: {
-    color: colors.error,
+    color: "red",
     marginTop: 10,
     textAlign: "center",
   },
   retry: {
     marginTop: 10,
     textAlign: "center",
-    color: colors.primary,
+    color: colors.accent,
   },
 });
