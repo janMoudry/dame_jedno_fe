@@ -16,8 +16,10 @@
     "@react-navigation/native-stack": "^7.3.14",
     "axios": "^1.9.0",
     "expo": "~53.0.9",
+    "expo-blur": "~12.9.2",
     "expo-location": "^18.1.5",
     "expo-status-bar": "~2.2.3",
+    "lucide-react-native": "^0.359.0",
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-maps": "1.20.1"

@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator, Alert } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { View, StyleSheet, ActivityIndicator, Alert, Text } from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { BlurView } from "expo-blur";
 import axios from "axios";
 import useLocation from "../hooks/useLocation";
 import { Event } from "../types";
 import { FloatingButton } from "../components/FloatingButton";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../theme/colors";
+
+const MAP_STYLE = [
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }],
+  },
+];
 
 export default function MapScreen() {
   const navigation = useNavigation();
@@ -49,9 +63,13 @@ export default function MapScreen() {
   return (
     <View style={styles.container}>
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={StyleSheet.absoluteFillObject}
         showsUserLocation={true}
         showsMyLocationButton={true}
+        showsCompass={true}
+        showsScale={true}
+        customMapStyle={MAP_STYLE}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -60,13 +78,32 @@ export default function MapScreen() {
         }}
       >
         {events.map((event) => (
-          <Marker
-            key={event.id}
-            coordinate={{
-              latitude: event.latitude,
-              longitude: event.longitude,
-            }}
-            title={event.type}
+          <Marker 
+            key={event.id} 
+            coordinate={{ 
+              latitude: event.latitude, 
+              longitude: event.longitude 
+            }} 
+            onPress={() => navigation.navigate("EventDetail" as never, { event } as never)}
+          >
+            <BlurView intensity={80} tint="light" style={styles.markerContainer}>
+              <View style={[
+                styles.markerContent,
+                { backgroundColor: getEventColor(event.type) }
+              ]}>
+                <Text style={styles.markerText}>
+                  {getEventIcon(event.type)}
+                </Text>
+              </View>
+              <View style={styles.markerInfo}>
+                <Text style={styles.markerTitle}>
+                  {event.type}
+                </Text>
+                <Text style={styles.markerSubtitle} numberOfLines={1}>
+                  {event.description || "Bez popisu"}
+                </Text>
+              </View>
+            </BlurView>
             description={event.description}
             onPress={() => {
               navigation.navigate("EventDetail" as never, { event } as never);
@@ -89,5 +126,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.background,
+  },
+  markerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    borderRadius: 16,
+    maxWidth: 200,
+  },
+  markerContent: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  markerText: {
+    fontSize: 18,
+    color: colors.white,
+  },
+  markerInfo: {
+    marginLeft: 8,
+    flex: 1,
+  },
+  markerTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.text,
+  },
+  markerSubtitle: {
+    fontSize: 12,
+    color: colors.surface,
   },
 });
