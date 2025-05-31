@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { Plus } from "lucide-react-native";
 import colors from "../theme/colors";
 import { BlurView } from "expo-blur";
@@ -10,9 +10,13 @@ type Props = {
 
 export const FloatingButton = ({ onPress }: Props) => {
   return (
-    <TouchableOpacity style={styles.buttonWrapper} onPress={onPress}>
-      <BlurView intensity={80} tint="light" style={styles.button}>
-        <Plus size={24} color={colors.primary} strokeWidth={2.5} />
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.buttonWrapper}
+      onPress={onPress}
+    >
+      <BlurView intensity={60} tint="light" style={styles.blur}>
+        <Plus size={26} color={colors.primary} strokeWidth={2.5} />
       </BlurView>
     </TouchableOpacity>
   );
@@ -21,21 +25,27 @@ export const FloatingButton = ({ onPress }: Props) => {
 const styles = StyleSheet.create({
   buttonWrapper: {
     position: "absolute",
-    right: 16,
+    right: 20,
     bottom: 30,
-    shadowColor: "transparent"
+    zIndex: 10,
   },
-  button: {
+  blur: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: colors.card,
-    borderRadius: 30,
-    width: 56,
-    height: 56,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: colors.shadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
 });
