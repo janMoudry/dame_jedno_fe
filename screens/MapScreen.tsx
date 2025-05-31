@@ -104,11 +104,7 @@ export default function MapScreen() {
                 </Text>
               </View>
             </BlurView>
-            description={event.description}
-            onPress={() => {
-              navigation.navigate("EventDetail" as never, { event } as never);
-            }}
-          />
+          </Marker>
         ))}
       </MapView>
 
