@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import axios from "axios";
-import { User, CircleUser as UserCircle2, ChevronDown, Calendar } from "lucide-react-native";
+import { User, CircleUser as UserCircle2, ChevronDown, Calendar, X } from "lucide-react-native";
 import colors from "../theme/colors";
 
 const GENDER_OPTIONS = [
@@ -19,6 +19,11 @@ const GENDER_OPTIONS = [
   { label: "Žena", value: "žena" },
   { label: "Jiné", value: "jiné" },
 ];
+
+const BIRTH_YEARS = Array.from({ length: 100 }, (_, i) => {
+  const year = new Date().getFullYear() - i;
+  return { label: String(year), value: year };
+});
 
 type User = {
   name: string;
@@ -33,7 +38,8 @@ export default function ProfileScreen() {
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
-  const [age, setAge] = useState("");
+  const [birthYear, setBirthYear] = useState<number | null>(null);
+  const [showYearModal, setShowYearModal] = useState(false);
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,7 +51,7 @@ export default function ProfileScreen() {
       setUser(res.data);
       setName(res.data.name);
       setGender(res.data.gender);
-      setAge(String(res.data.age));
+      setBirthYear(new Date().getFullYear() - res.data.age);
     } catch (err) {
       setError("Nepodařilo se načíst uživatelské údaje");
     } finally {
@@ -54,7 +60,7 @@ export default function ProfileScreen() {
   };
 
   const updateUser = async () => {
-    if (!name || !gender || !age) {
+    if (!name || !gender || !birthYear) {
       setError("Vyplňte prosím všechna pole");
       return;
     }
@@ -65,7 +71,7 @@ export default function ProfileScreen() {
       await axios.put("http://10.0.1.41:3001/api/users/abc123", {
         name,
         gender,
-        age: Number(age),
+        age: new Date().getFullYear() - birthYear,
       });
       setUser({ name, gender, age: Number(age) });
     } catch (err) {
@@ -127,15 +133,16 @@ export default function ProfileScreen() {
             </BlurView>
           </TouchableOpacity>
 
-          <BlurView intensity={60} tint="light" style={styles.inputContainer}>
-            <Calendar size={20} color={colors.surface} />
-            <TextInput
-              style={styles.input}
-              placeholder="Věk"
-              placeholderTextColor={colors.surface}
-              keyboardType="numeric"
-              value={age}
-              onChangeText={setAge}
+          <TouchableOpacity onPress={() => setShowYearModal(true)}>
+            <BlurView intensity={60} tint="light" style={styles.inputContainer}>
+              <Calendar size={20} color={colors.surface} />
+              <Text style={[
+                styles.input,
+                !birthYear && styles.placeholder
+              ]}>
+                {birthYear ? String(birthYear) : "Rok narození"}
+              </Text>
+              <ChevronDown size={20} color={colors.surface} />
             />
           </BlurView>
         </View>
@@ -174,30 +181,93 @@ export default function ProfileScreen() {
         transparent
         animationType="fade"
         onRequestClose={() => setShowGenderModal(false)}
+        statusBarTranslucent
       >
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setShowGenderModal(false)}
         >
-          <BlurView intensity={80} tint="light" style={styles.modalContent}>
-            {GENDER_OPTIONS.map((option) => (
+          <BlurView intensity={80} tint="light" style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Vyberte pohlaví</Text>
               <TouchableOpacity
-                key={option.value}
-                style={styles.optionButton}
-                onPress={() => {
-                  setGender(option.value);
-                  setShowGenderModal(false);
-                }}
+                onPress={() => setShowGenderModal(false)}
+                style={styles.closeButton}
               >
-                <Text style={[
-                  styles.optionText,
-                  gender === option.value && styles.optionTextSelected
-                ]}>
-                  {option.label}
-                </Text>
+                <X size={24} color={colors.surface} />
               </TouchableOpacity>
-            ))}
+            </View>
+            <View style={styles.modalContent}>
+              {GENDER_OPTIONS.map((option) => (
+                <TouchableOpacity
+                  key={option.value}
+                  style={[
+                    styles.optionButton,
+                    gender === option.value && styles.optionButtonSelected
+                  ]}
+                  onPress={() => {
+                    setGender(option.value);
+                    setShowGenderModal(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    gender === option.value && styles.optionTextSelected
+                  ]}>
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </BlurView>
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        visible={showYearModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowYearModal(false)}
+        statusBarTranslucent
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowYearModal(false)}
+        >
+          <BlurView intensity={80} tint="light" style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Rok narození</Text>
+              <TouchableOpacity
+                onPress={() => setShowYearModal(false)}
+                style={styles.closeButton}
+              >
+                <X size={24} color={colors.surface} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.yearList}>
+              {BIRTH_YEARS.map((year) => (
+                <TouchableOpacity
+                  key={year.value}
+                  style={[
+                    styles.optionButton,
+                    birthYear === year.value && styles.optionButtonSelected
+                  ]}
+                  onPress={() => {
+                    setBirthYear(year.value);
+                    setShowYearModal(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    birthYear === year.value && styles.optionTextSelected
+                  ]}>
+                    {year.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </BlurView>
         </TouchableOpacity>
       </Modal>
@@ -262,24 +332,49 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    padding: 20,
   },
-  modalContent: {
+  modalCard: {
     width: "100%",
-    borderRadius: 16,
+    maxHeight: "80%",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     overflow: "hidden",
   },
-  optionButton: {
-    padding: 16,
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: colors.surface + "20",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: colors.text,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  modalContent: {
+    padding: 12,
+  },
+  yearList: {
+    maxHeight: 400,
+  },
+  optionButton: {
+    padding: 14,
+    marginVertical: 4,
+    borderRadius: 12,
+  },
+  optionButtonSelected: {
+    backgroundColor: colors.primary + "15",
   },
   optionText: {
     fontSize: 16,
     color: colors.text,
-    textAlign: "center",
   },
   optionTextSelected: {
     color: colors.primary,
