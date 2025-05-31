@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 30,
     zIndex: 10,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    borderRadius: 32
   },
   blur: {
     width: 64,
