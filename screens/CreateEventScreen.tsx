@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
-import { Beer, Coffee, MessageCircle, Running } from "lucide-react-native";
+import { Beer, Coffee, MessageCircle, FileWarning as Running } from "lucide-react-native";
 import axios from "axios";
 import { colors } from "../theme";
 import useLocation from "../hooks/useLocation";
