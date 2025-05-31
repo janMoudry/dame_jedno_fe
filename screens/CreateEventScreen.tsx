@@ -121,7 +121,7 @@ export default function CreateEventScreen() {
         <BlurView intensity={60} tint="light" style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Např. 'Dáme jedno v centru..."'
+            placeholder="Např. Dáme jedno v centru..."
             placeholderTextColor={colors.surface}
             value={description}
             onChangeText={setDescription}
