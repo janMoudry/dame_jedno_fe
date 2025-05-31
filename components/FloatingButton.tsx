@@ -28,14 +28,12 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 30,
     zIndex: 10,
-    backgroundColor: "transparent",
-    borderRadius: 32
   },
   blur: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: "transparent",
+    backgroundColor: colors.card,
     justifyContent: "center",
     alignItems: "center",
     ...Platform.select({
